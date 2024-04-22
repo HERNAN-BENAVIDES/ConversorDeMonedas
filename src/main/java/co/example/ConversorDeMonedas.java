@@ -8,11 +8,18 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 
 @SuppressWarnings("all")
 public class ConversorDeMonedas {
+
+    private static final List<String> historial = new ArrayList<>();
+
 
     /**
      * Programa principal
@@ -33,7 +40,7 @@ public class ConversorDeMonedas {
                         **   6) Dólares a Pesos Mexicanos                                                                                                                                  **
                         **   7) Reales Brasileños a Dólares                                                                                                                                 **
                         **   8) Dólares a Reales Brasileños                                                                                                                                 **
-                        **   9) Pesos Chilenos a Dólares                                                                                                                                      **
+                        **   9) Historial                                                                                                                                                                 **
                         **   0) Salir                                                                                                                                                                        **
                         ************************************************************************************************
                 """;
@@ -70,7 +77,7 @@ public class ConversorDeMonedas {
                     convertirDivisa("USD", "BRL");
                     break;
                 case 9:
-                    convertirDivisa("CLP", "USD");
+                    verHistorial();
                     break;
                 case 0:
                     System.exit(0);
@@ -115,6 +122,21 @@ public class ConversorDeMonedas {
 
         // Calcular el resultado de la conversión y mostrarlo al usuario
         double resultado = cantidad * tasaDeCambio;
-        System.out.printf("%.2f %s equivale a %.2f %s%n + \n", cantidad, desde, resultado, hacia);
+        String historia = String.format("[%s] %.2f %s equivale a %.2f %s%n", LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")), cantidad, desde, resultado, hacia);
+        historial.add(historia);
+        System.out.println(historia + "\n");
+    }
+
+    private static void verHistorial() {
+        System.out.println("\n    ------------------------------------------------- Historial -----------------------------------------------------------------\n");
+
+        if (historial.isEmpty()) {
+            System.out.println("    No hay conversiones realizadas.");
+            return;
+        }
+
+        for (String conversion : historial) {
+            System.out.println(conversion);
+        }
     }
 }
